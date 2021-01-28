@@ -3,9 +3,13 @@ import datetime
 #Todo
 #implement school selector
 #implement command line arguments
+
 #config:
 defaultDomain = "halmstad.skola24.se"
 defaultId = "ÅÅMMDD-XXXX"
+#default school (not implemented, it's ahere for the syntax)
+defaultUnit = ""
+
 
 #headers for the api
 headers = {"X-Scope": "8a22163c-8662-4535-9050-bc5e1923df48", "Content-Type":"application/json"}

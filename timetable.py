@@ -2,6 +2,9 @@ import requests
 import datetime
 import json
 import time
+#Todo
+#implement school selector
+#implement command line arguments
 #config:
 defaultDomain = "halmstad.skola24.se"
 defaultId = "ÅÅMMDD-XXXX"

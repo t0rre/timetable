@@ -59,9 +59,9 @@ data={
 date = datetime.datetime.today().weekday()+1
 
 #on weekend
-if(datetime.datetime.today().weekday()>4):
+if(date>5):
     #get the timetable for next week instead
-    data["week"]=datetime.datetime.today().isocalendar()[1]+1
+    data["week"]=data["week"]+1
     print("[INFO]\tCurrently weekend. Getting timetable for next week.")
     #reset date to first date of week
     date = 1
@@ -70,7 +70,7 @@ if(datetime.datetime.today().weekday()>4):
         data["year"]=data["year"]+1
         data["week"]=1
 
-#get the timetalbe
+#get the timetable
 response = requests.post("https://web.skola24.se/api/render/timetable", headers=headers, json=data)
 week = response.json()["data"]["lessonInfo"]
 #create empty object for lessons

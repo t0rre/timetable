@@ -7,7 +7,7 @@ import datetime
 defaultDomain = "halmstad.skola24.se"
 defaultId = "ÅÅMMDD-XXXX"
 
-
+#headers for the api
 headers = {"X-Scope": "8a22163c-8662-4535-9050-bc5e1923df48", "Content-Type":"application/json"}
 def defInput(string, default):
     inp = input(string+" ["+default+"]: ")
@@ -17,10 +17,13 @@ def defInput(string, default):
 domain = defInput("Enter domain", defaultDomain)
 studentId = defInput("Enter your id", defaultId)
 data={"signature":studentId}
+#get encoded signature from id
 response = requests.post("https://web.skola24.se/api/encrypt/signature", headers=headers, json=data)
 signature = response.json()["data"]["signature"]
+#get render key
 response = requests.post("https://web.skola24.se/api/get/timetable/render/key", headers=headers, data="null")
 renderKey = response.json()["data"]["key"]
+#request body for timetable
 data={
    "renderKey":renderKey,
    "host":domain,
@@ -41,7 +44,9 @@ data={
    "privateSelectionMode":"null",
    "customerKey":""
 }
+#the api uses 1-7 for daynumber, python uses 0-6
 date = datetime.datetime.today().weekday()+1
+
 #on weekend
 if(datetime.datetime.today().weekday()>4):
     #get the timetable for next week instead
@@ -50,12 +55,16 @@ if(datetime.datetime.today().weekday()>4):
     #reset date to first date of week
     date = 1
 
+#get the timetalbe
 response = requests.post("https://web.skola24.se/api/render/timetable", headers=headers, json=data)
 week = response.json()["data"]["lessonInfo"]
+#create empty object for lessons
 today = {"list": []}
 for x in week:
+    #add only lessons for current day to object
     if x["dayOfWeekNumber"] == date:
-        today["list"].append(x) 
+        today["list"].append(x)
+#format lesson object nicer 
 today = today["list"]
 #function to return starttime for comparison
 def startTime(elem):

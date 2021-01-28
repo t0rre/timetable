@@ -7,8 +7,8 @@ import datetime
 #config:
 defaultDomain = "halmstad.skola24.se"
 defaultId = "ÅÅMMDD-XXXX"
-#default school (not implemented, it's here for the syntax)
-defaultUnit = ""
+doNotAsk = False                            #useful for when you do not wish to enter your id each time
+defaultUnit = ""                            #default school (not implemented, it's here for the syntax)
 
 
 #headers for the api
@@ -19,8 +19,13 @@ def defInput(string, default):
     if(inp == ""):
         inp = default
     return inp
-domain = defInput("Enter domain", defaultDomain)
-studentId = defInput("Enter your id", defaultId)
+if(doNotAsk):
+    domain = defaultDomain
+    studentId = defaultId
+    unit = defaultUnit
+else:
+    domain = defInput("Enter domain", defaultDomain)
+    studentId = defInput("Enter your id", defaultId)
 data={"signature":studentId}
 #get encoded signature from id
 response = requests.post("https://web.skola24.se/api/encrypt/signature", headers=headers, json=data)

@@ -1,5 +1,6 @@
 import requests
 import datetime
+from isoweek import Week
 #Todo
 #implement school selector
 #implement command line arguments
@@ -64,6 +65,10 @@ if(datetime.datetime.today().weekday()>4):
     print("[INFO]\tCurrently weekend. Getting timetable for next week.")
     #reset date to first date of week
     date = 1
+    #if on weekend in the last week of year
+    if(data["week"]==Week.last_week_of_year(data["year"])):
+        data["year"]=data["year"]+1
+        data["week"]=1
 
 #get the timetalbe
 response = requests.post("https://web.skola24.se/api/render/timetable", headers=headers, json=data)

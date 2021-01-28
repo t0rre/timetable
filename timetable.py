@@ -13,6 +13,7 @@ defaultUnit = ""
 
 #headers for the api
 headers = {"X-Scope": "8a22163c-8662-4535-9050-bc5e1923df48", "Content-Type":"application/json"}
+#function for input, and with a default value
 def defInput(string, default):
     inp = input(string+" ["+default+"]: ")
     if(inp == ""):

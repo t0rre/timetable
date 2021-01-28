@@ -7,7 +7,7 @@ import datetime
 #config:
 defaultDomain = "halmstad.skola24.se"
 defaultId = "ÅÅMMDD-XXXX"
-#default school (not implemented, it's ahere for the syntax)
+#default school (not implemented, it's here for the syntax)
 defaultUnit = ""
 
 

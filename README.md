@@ -1,7 +1,8 @@
 # timetable
 An commandline python script for getting timetable from skola24.se (Work In Progress)
 
-Idea from [@aj0er](https://github.com/aj0er)'s [Schema-website](https://te19adjo.kgwebb.se/schema/)
+Idea from [@aj0er](https://github.com/aj0er)'s [Schema-website](https://te19adjo.kgwebb.se/schema/).
+Help also provided by [@aj0er](https://github.com/aj0er).
 
 ## Requirements
 * Python 3

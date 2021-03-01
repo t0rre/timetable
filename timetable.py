@@ -72,7 +72,7 @@ if(args.guid_selector):
 else:
     #normal run
     if (args.unit_guid == None):
-        guid = defInput("Enter your id", defaultUnit)
+        guid = defInput("Enter your unitGuid", defaultUnit)
     else:
         guid = args.unit_guid
     if (args.id == None):

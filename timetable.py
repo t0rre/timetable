@@ -19,6 +19,7 @@ parser.add_argument('-g', '--unit-guid', help="School-id, can be acquired throug
 parser.add_argument('-G', '--guid-selector', action='store_true', help="Prints all the available units in the domain")
 parser.add_argument('-w', '--week', help="week number, default is current week", type=int, default=datetime.datetime.today().isocalendar()[1])
 parser.add_argument('-y', '--year', help="year, default is current year", type=int, default=datetime.datetime.today().year)
+parser.add_argument('--hide-finished', help='Hide the lessons that are already finished for the day', action='store_true')
 args = parser.parse_args()
 print(args) ##debug
 
@@ -115,14 +116,23 @@ else:
     today = today["list"]
     #function to return starttime for comparison
     def startTime(elem):
-        return (datetime.datetime.strptime(elem["timeStart"], '%H:%M:%S')-datetime.datetime(1970,1,1)).total_seconds()
+        return (datetime.datetime.combine(datetime.datetime.today(), datetime.datetime.strptime(elem["timeStart"], '%H:%M:%S').time())-datetime.datetime(1970,1,1)).total_seconds()
+    def endTime(elem):
+        return (datetime.datetime.combine(datetime.datetime.today(), datetime.datetime.strptime(elem["timeEnd"], '%H:%M:%S').time())-datetime.datetime(1970,1,1)).total_seconds()
+    def printLesson(elem):
+        for text in elem["texts"]:
+            print(text)
+        print(elem["timeStart"]+" - "+elem["timeEnd"])
     #sort lessons in order of start time
     today = sorted(today, key=startTime)
     #print each lesson
     print("Returning timetable for "+calendar.day_name[date-1]+", week "+str(data["week"])+".")
     for lesson in today:
-        print("------")
-        for text in lesson["texts"]:
-            print(text)
-        print(lesson["timeStart"]+" - "+lesson["timeEnd"])
+        if (args.hide_finished):
+            if(endTime(lesson)>(datetime.datetime.today()-datetime.datetime(1970,1,1)).total_seconds()):
+                print("------")
+                printLesson(lesson)
+        else:
+            print("------")
+            printLesson(lesson)
     print("------")

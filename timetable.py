@@ -4,6 +4,7 @@ import datetime
 import calendar
 from isoweek import Week
 import argparse
+import json
 #Todo
 #implement school selector
 #implement command line arguments
@@ -32,6 +33,19 @@ def defInput(string, default):
     if(inp == ""):
         inp = default
     return inp
+def skola24ErrorCheck(r):
+    if(r.status_code != requests.codes.ok):
+        print("[ERROR]\tGot response "+str(r.status_code)+" from "+r.url)
+        exit()
+    if (r.json()["error"] != None):
+        print("[ERROR]\tGot the following error from "+r.url+" : "+ json.dumps(r.json()["error"]))
+        exit()
+    if(r.json()["validation"]):
+        print("[ERROR]\tGot error from "+r.url+", error: "+json.dumps(r.json()["validation"]))
+        exit()
+    if(r.json()["exception"] != None):
+        print("[ERROR]\tGot exception from "+r.url+", error: "+json.dumps(r.json()["exception"]))
+        exit()
 
 #prompt for student id if domain argument isn't supplied, otherwise use the supplied argument
 if(args.domain == None):
@@ -44,28 +58,37 @@ if(args.guid_selector):
     data = {"getTimetableViewerUnitsRequest":{"hostName":domain}}
     print("[INFO]\tGetting units for "+domain)
     response = requests.post("https://web.skola24.se/api/services/skola24/get/timetable/viewer/units", headers=headers, json=data)
+    skola24ErrorCheck(response)
+    if(response.json()["data"]["validationErrors"]):
+        print("[ERROR]\tGot error from "+response.url+", error: "+json.dumps(response.json()["data"]["validationErrors"]))
+        exit()
+    if(response.json()["data"]["errors"] != None):
+        print("[ERROR]\tGot error from "+response.url+", error: "+json.dumps(response.json()["data"]["errors"]))
+        exit()
     units = response.json()["data"]["getTimetableViewerUnitsResponse"]["units"]
     print(units)
     for unit in units:
         print("Name: "+unit["unitId"]+" GUID: "+unit["unitGuid"])
 else:
     #normal run
-    if (args.id == None):
-        studentId = defInput("Enter your id", defaultId)
-    else:
-        studentId = args.id
     if (args.unit_guid == None):
         guid = defInput("Enter your id", defaultUnit)
     else:
         guid = args.unit_guid
+    if (args.id == None):
+        studentId = defInput("Enter your id", defaultId)
+    else:
+        studentId = args.id
     data={"signature":studentId}
     #get encoded signature from id
     print("[INFO]\tGetting encoded student id")
     response = requests.post("https://web.skola24.se/api/encrypt/signature", headers=headers, json=data)
+    skola24ErrorCheck(response)
     signature = response.json()["data"]["signature"]
     #get render key
     print("[INFO]\tGetting renderkey")
     response = requests.post("https://web.skola24.se/api/get/timetable/render/key", headers=headers, data="null")
+    skola24ErrorCheck(response)
     renderKey = response.json()["data"]["key"]
     #request body for timetable
     data={
@@ -106,6 +129,7 @@ else:
     #get the timetable
     print("[INFO]\tGetting timetable")
     response = requests.post("https://web.skola24.se/api/render/timetable", headers=headers, json=data)
+    skola24ErrorCheck(response)
     week = response.json()["data"]["lessonInfo"]
     #create empty object for lessons
     today = {"list": []}

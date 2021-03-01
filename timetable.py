@@ -53,7 +53,7 @@ else:
     else:
         studentId = args.id
     if (args.unit_guid == None):
-        guid = defInput("Enter your id", defaultId)
+        guid = defInput("Enter your id", defaultUnit)
     else:
         guid = args.unit_guid
     data={"signature":studentId}

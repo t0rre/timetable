@@ -14,9 +14,9 @@ defaultId = "ÅÅMMDD-XXXX"
 defaultUnit = ""                            #default school (not implemented, it's here for the syntax)
 
 
-parser = argparse.ArgumentParser(description='a timetable-script for skola25\'s "schemavisare"')
+parser = argparse.ArgumentParser(description='A timetable-script for skola25\'s "schemavisare"')
 parser.add_argument('-i', '--id', help='The student-id, often a "personnummer".')
-parser.add_argument('-d', '--domain', help="the municipality's skola24-domain, eg halmstad.skola24.se")
+parser.add_argument('-d', '--domain', help="The municipality's skola24-domain, eg halmstad.skola24.se")
 parser.add_argument('-g', '--unit-guid', help="School-id, can be acquired through the -G flag")
 parser.add_argument('-G', '--guid-selector', action='store_true', help="Prints all the available units in the domain")
 parser.add_argument('-w', '--week', help="week number, default is current week", type=int, default=datetime.datetime.today().isocalendar()[1])

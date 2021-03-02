@@ -7,8 +7,8 @@ Help also provided by [@aj0er](https://github.com/aj0er).
 ## Requirements
 * Python 3
 * Python Packages
-  * isoweek
-  * requests
+  * `isoweek`
+  * `requests`
 
 ## Install
 * Download the python script

@@ -171,7 +171,7 @@ else:
     #sort lessons in order of start time
     today = sorted(today, key=startTime)
     #print each lesson
-    print("Returning timetable for "+calendar.day_name[date-1]+", week "+str(data["week"])+".")
+    print("Timetable for "+calendar.day_name[date-1]+", week "+str(data["week"])+".")
     for lesson in today:
         if (args.hide_finished):
             if(endTime(lesson)>(datetime.datetime.today()-datetime.datetime(1970,1,1)).total_seconds()):
@@ -181,3 +181,4 @@ else:
             print("------")
             printLesson(lesson)
     print("------")
+    print("Timetable for "+calendar.day_name[date-1]+", week "+str(data["week"])+".")

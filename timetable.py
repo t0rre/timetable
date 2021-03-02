@@ -16,14 +16,15 @@ defaultUnit = ""                            #default school (not implemented, it
 
 parser = argparse.ArgumentParser(description='A timetable-script for skola25\'s "schemavisare"')
 parser.add_argument('-i', '--id', help='The student-id, often a "personnummer".')
-parser.add_argument('-d', '--domain', help="The municipality's skola24-domain, eg halmstad.skola24.se")
+parser.add_argument('-D', '--domain', help="The municipality's skola24-domain, eg halmstad.skola24.se")
 parser.add_argument('-g', '--unit-guid', help="School-id, can be acquired through the -G flag")
 parser.add_argument('-G', '--guid-selector', action='store_true', help="Prints all the available units in the domain")
 parser.add_argument('-w', '--week', help="week number, default is current week", type=int, default=datetime.datetime.today().isocalendar()[1])
 parser.add_argument('-y', '--year', help="year, default is current year", type=int, default=datetime.datetime.today().year)
+parser.add_argument('-d', '--day', help="day, 1-7 default is the current day", type=int, default=datetime.datetime.today().weekday()+1)
 parser.add_argument('--hide-finished', help='Hide the lessons that are already finished for the day', action='store_true')
 args = parser.parse_args()
-print(args) ##debug
+#print(args) ##debug
 
 #headers for the api
 headers = {"X-Scope": "8a22163c-8662-4535-9050-bc5e1923df48", "Content-Type":"application/json"}
@@ -112,10 +113,14 @@ else:
     "customerKey":""
     }
     #the api uses 1-7 for daynumber, python uses 0-6
-    date = datetime.datetime.today().weekday()+1
+    if(args.day > 7):
+        print("[WARNING]\tDay is larger than 7, capping at 7.")
+        date = 7
+    else:
+        date = args.day
 
     #on weekend
-    if(date>5):
+    """ if(date>5):
         #get the timetable for next week instead
         data["week"]=data["week"]+1
         print("[WARNING]\tCurrently weekend. Getting timetable for next week.")
@@ -124,7 +129,7 @@ else:
         #if on weekend in the last week of year
         if(data["week"]==Week.last_week_of_year(data["year"])):
             data["year"]=data["year"]+1
-            data["week"]=1
+            data["week"]=1 """
 
     #get the timetable
     print("[INFO]\tGetting timetable")
@@ -132,13 +137,28 @@ else:
     skola24ErrorCheck(response)
     week = response.json()["data"]["lessonInfo"]
     #create empty object for lessons
-    today = {"list": []}
-    for x in week:
-        #add only lessons for current day to object
-        if x["dayOfWeekNumber"] == date:
-            today["list"].append(x)
-    #format lesson object nicer 
-    today = today["list"]
+    while True:
+        today = {"list": []}
+        for x in week:
+            #add only lessons for current day to object
+            if x["dayOfWeekNumber"] == date:
+                today["list"].append(x)
+        #format lesson object nicer 
+        today = today["list"]
+        if(not today):
+            if(date == 7):
+                print("[INFO]\tDay was empty, trying first day of next week")
+                date = 1
+                data["week"]=data["week"]+1
+                if(data["week"]==Week.last_week_of_year(data["year"])):
+                    print("[INFO]\tLast week of year, trying next year.")
+                    data["year"]=data["year"]+1
+                    data["week"]=1
+            else:
+                print("[INFO]\tDay was empty, trying next day")
+                date+=1
+        else:
+            break
     #function to return starttime for comparison
     def startTime(elem):
         return (datetime.datetime.combine(datetime.datetime.today(), datetime.datetime.strptime(elem["timeStart"], '%H:%M:%S').time())-datetime.datetime(1970,1,1)).total_seconds()

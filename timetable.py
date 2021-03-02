@@ -21,7 +21,7 @@ parser.add_argument('-g', '--unit-guid', help="School-id, can be acquired throug
 parser.add_argument('-G', '--guid-selector', action='store_true', help="Prints all the available units in the domain")
 parser.add_argument('-w', '--week', help="week number, default is current week", type=int, default=datetime.datetime.today().isocalendar()[1])
 parser.add_argument('-y', '--year', help="year, default is current year", type=int, default=datetime.datetime.today().year)
-parser.add_argument('-d', '--day', help="day, 1-7 default is the current day", type=int, default=datetime.datetime.today().weekday()+1)
+parser.add_argument('-d', '--day', help="day 1-7, default is the current day", type=int, default=datetime.datetime.today().weekday()+1)
 parser.add_argument('--hide-finished', help='Hide the lessons that are already finished for the day', action='store_true')
 args = parser.parse_args()
 #print(args) ##debug

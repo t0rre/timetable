@@ -19,18 +19,18 @@ Help also provided by [@aj0er](https://github.com/aj0er).
 
 ## Command-line arguments
 ```
-usage: timetable.py [-h] [-i ID] [-d DOMAIN] [-g UNIT_GUID] [-G] [-w WEEK] [-y YEAR]
-                    [--hide-finished]
+usage: timetable.py [-h] [-i ID] [-D DOMAIN] [-g UNIT_GUID] [-G] [-w WEEK] [-y YEAR] [-d DAY] [--hide-finished]
 
 optional arguments:
-  -h, --help            Show this help message and exit
+  -h, --help            show this help message and exit
   -i ID, --id ID        The student-id, often a "personnummer".
-  -d DOMAIN, --domain DOMAIN
+  -D DOMAIN, --domain DOMAIN
                         The municipality's skola24-domain, eg halmstad.skola24.se
   -g UNIT_GUID, --unit-guid UNIT_GUID
                         School-id, can be acquired through the -G flag
   -G, --guid-selector   Prints all the available units in the domain
   -w WEEK, --week WEEK  week number, default is current week
   -y YEAR, --year YEAR  year, default is current year
+  -d DAY, --day DAY     day 1-7, default is the current day
   --hide-finished       Hide the lessons that are already finished for the day
 ```
